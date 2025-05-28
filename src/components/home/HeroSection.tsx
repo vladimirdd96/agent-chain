@@ -106,7 +106,7 @@ const HeroSection = () => {
                 </Button>
               </Link>
 
-              <Link href="/store">
+              <Link href="/agent-store">
                 <Button
                   variant="outline"
                   size="lg"

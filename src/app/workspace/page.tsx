@@ -56,8 +56,8 @@ export default function WorkspacePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-6xl mx-auto mt-16">
+    <div className="container mx-auto px-4">
+      <div className="max-w-6xl mx-auto mt-15">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -78,7 +78,7 @@ export default function WorkspacePage() {
 
           {/* User's Agents */}
           <section>
-            <div className="flex items-center justify-between mb-6">
+            {/* <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold text-white">Your Agents</h2>
               <button
                 onClick={loadUserAgents}
@@ -97,7 +97,7 @@ export default function WorkspacePage() {
                   />
                 </svg>
               </button>
-            </div>
+            </div> */}
 
             {userAgents.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

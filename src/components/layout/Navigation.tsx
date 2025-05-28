@@ -11,7 +11,7 @@ export function Navigation() {
 
   const navItems = [
     { name: "WorkSpace", href: "/workspace" },
-    { name: "Agent Store", href: "/store" },
+    { name: "Agent Store", href: "/agent-store" },
     { name: "Tools", href: "/tools" },
     { name: "Docs", href: "/docs" },
   ];

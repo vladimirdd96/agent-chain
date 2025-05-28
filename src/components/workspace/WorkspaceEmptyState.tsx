@@ -231,7 +231,7 @@ const WorkspaceEmptyState = () => {
             >
               Or{" "}
               <Link
-                href="/store"
+                href="/agent-store"
                 className="text-purple-400 hover:text-purple-300 transition-colors underline decoration-dotted underline-offset-4"
               >
                 browse the Agent Store

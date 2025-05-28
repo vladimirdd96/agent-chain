@@ -7,9 +7,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AgentChain - Web3 AI Agent Platform",
-  description:
-    "Deploy and manage AI agents on Solana and EVM chains - The future of decentralized AI",
+  title: "MindMint - Web3 AI Agent Platform",
+  description: "Deploy and manage AI agents on Solana and EVM chains",
 };
 
 export default function RootLayout({

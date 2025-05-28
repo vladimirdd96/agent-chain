@@ -9,6 +9,7 @@ import { WalletAnalytics } from "@/components/wallet/WalletAnalytics";
 import { AgentType } from "@/lib/mindmint-sdk/types";
 import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
 import { AgentDashboard } from "@/components/workspace/AgentDashboard";
+import WalletConnectPrompt from "@/components/auth/WalletConnectPrompt";
 
 export default function WorkspacePage() {
   const { connected, publicKey } = useWallet();
@@ -143,15 +144,12 @@ export default function WorkspacePage() {
   if (!connected) {
     return (
       <div className="container mx-auto px-4 py-16">
-        <div className="max-w-6xl mx-auto mt-16">
-          <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-8 text-center">
-            <h2 className="text-2xl font-semibold text-white mb-4">
-              Connect Your Wallet
-            </h2>
-            <p className="text-white/70 mb-6">
-              Connect your wallet to view your workspace and manage your agents.
-            </p>
-          </div>
+        <div className="max-w-4xl mx-auto mt-16">
+          <WalletConnectPrompt
+            title="Connect Your Wallet to Begin"
+            subtitle="Connect your wallet to view your workspace and manage your agents."
+            showFeatures={true}
+          />
         </div>
       </div>
     );

@@ -10,6 +10,7 @@ import { WalletAnalytics } from "@/components/wallet/WalletAnalytics";
 import { PlaceholderImage } from "@/components/common/PlaceholderImage";
 import { AgentWithStats } from "@/lib/mindmint-sdk/types";
 import WalletButton from "@/components/auth/WalletButton";
+import WalletConnectPrompt from "@/components/auth/WalletConnectPrompt";
 import { Button } from "@/components/ui/Button";
 
 interface AgentDetailPageProps {
@@ -193,15 +194,12 @@ export default function AgentDetailPage({ params }: AgentDetailPageProps) {
                 onRefresh={refreshAnalytics}
               />
             ) : (
-              <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-8 text-center">
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                  Connect Your Wallet
-                </h2>
-                <p className="text-white/70 mb-6">
-                  Connect your wallet to view analytics and deploy this agent.
-                </p>
-                <WalletButton />
-              </div>
+              <WalletConnectPrompt
+                title="Connect Your Wallet"
+                subtitle="Connect your wallet to view analytics and deploy this agent."
+                showFeatures={true}
+                className="bg-transparent"
+              />
             )}
           </div>
         </div>

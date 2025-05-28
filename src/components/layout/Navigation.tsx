@@ -117,7 +117,7 @@ export function Navigation() {
                   </motion.div>
 
                   <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-blue-300">
-                    AgentChain
+                    MindMint
                   </span>
                 </div>
               </motion.div>

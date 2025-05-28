@@ -10,6 +10,7 @@ import DynamicCostBreakdown from "@/components/deploy/DynamicCostBreakdown";
 import DeploySuccessModal from "@/components/deploy/DeploySuccessModal";
 import AnimatedInput from "@/components/deploy/AnimatedInput";
 import InfoTooltip from "@/components/deploy/InfoTooltip";
+import WalletConnectPrompt from "@/components/auth/WalletConnectPrompt";
 import { RocketLaunchIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
 interface FormData {
@@ -151,35 +152,13 @@ export default function DeployAgentPage() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="max-w-2xl mx-auto"
+              className="max-w-4xl mx-auto"
             >
-              <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-8 text-center relative overflow-hidden">
-                {/* Animated background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-blue-500/5" />
-
-                <div className="relative z-10">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      duration: 20,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-3xl"
-                  >
-                    🚀
-                  </motion.div>
-
-                  <h2 className="text-3xl font-bold text-white mb-4">
-                    Connect Your Wallet to Continue
-                  </h2>
-                  <p className="text-white/70 mb-8 text-lg">
-                    You need to connect your Solana wallet to deploy and mint
-                    your AI agent as an NFT.
-                  </p>
-                  <WalletButton />
-                </div>
-              </div>
+              <WalletConnectPrompt
+                title="Connect Your Wallet to Continue"
+                subtitle="You need to connect your Solana wallet to deploy and mint your AI agent as an NFT."
+                showFeatures={true}
+              />
             </motion.div>
           ) : (
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">

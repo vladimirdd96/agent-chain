@@ -8,6 +8,7 @@ import { useAgents } from "@/hooks/useAgents";
 import { WalletAnalytics } from "@/components/wallet/WalletAnalytics";
 import { AgentCard } from "@/components/agents/AgentCard";
 import { AgentType } from "@/lib/mindmint-sdk/types";
+import WorkspaceEmptyState from "@/components/workspace/WorkspaceEmptyState";
 
 export default function WorkspacePage() {
   const { connected, publicKey } = useWallet();
@@ -105,17 +106,7 @@ export default function WorkspacePage() {
                 ))}
               </div>
             ) : (
-              <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-8 text-center">
-                <p className="text-white/70 mb-4">
-                  You haven't created any agents yet.
-                </p>
-                <a
-                  href="/deploy"
-                  className="inline-block px-6 py-3 text-base font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300"
-                >
-                  Create Your First Agent
-                </a>
-              </div>
+              <WorkspaceEmptyState />
             )}
           </section>
         </motion.div>

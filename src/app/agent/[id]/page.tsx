@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useAgents } from "@/hooks/useAgents";
 import { useWalletAnalytics } from "@/hooks/useWalletAnalytics";
 import { useWallet } from "@/components/auth/hooks/useWallet";
@@ -9,6 +10,7 @@ import { WalletAnalytics } from "@/components/wallet/WalletAnalytics";
 import { PlaceholderImage } from "@/components/common/PlaceholderImage";
 import { AgentWithStats } from "@/lib/mindmint-sdk/types";
 import WalletButton from "@/components/auth/WalletButton";
+import { Button } from "@/components/ui/Button";
 
 interface AgentDetailPageProps {
   params: {
@@ -18,6 +20,7 @@ interface AgentDetailPageProps {
 
 export default function AgentDetailPage({ params }: AgentDetailPageProps) {
   const { id } = params;
+  const router = useRouter();
   const { connected, publicKey } = useWallet();
   const { loading: agentLoading, error: agentError, getAgent } = useAgents();
   const {
@@ -27,6 +30,7 @@ export default function AgentDetailPage({ params }: AgentDetailPageProps) {
     refreshAnalytics,
   } = useWalletAnalytics();
   const [agent, setAgent] = useState<AgentWithStats | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     loadAgent();
@@ -39,9 +43,16 @@ export default function AgentDetailPage({ params }: AgentDetailPageProps) {
   }, [connected, publicKey]);
 
   const loadAgent = async () => {
-    const data = await getAgent(id);
-    if (data) {
-      setAgent(data);
+    try {
+      const data = await getAgent(id);
+      if (data) {
+        setAgent(data);
+      } else {
+        setNotFound(true);
+      }
+    } catch (error) {
+      console.error("Error loading agent:", error);
+      setNotFound(true);
     }
   };
 
@@ -55,13 +66,35 @@ export default function AgentDetailPage({ params }: AgentDetailPageProps) {
     );
   }
 
-  if (agentError || !agent) {
+  if (agentError || notFound || !agent) {
     return (
       <div className="container mx-auto px-4 py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4">
-            <p className="text-red-400">Failed to load agent details</p>
-          </div>
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-black/50 backdrop-blur-md border border-white/10 rounded-xl p-12"
+          >
+            <div className="text-6xl mb-6">🤖</div>
+            <h1 className="text-3xl font-bold text-white mb-4">
+              Agent Not Found
+            </h1>
+            <p className="text-white/70 text-lg mb-8">
+              The agent you're looking for might not exist yet or has been
+              removed.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button
+                variant="primary"
+                onClick={() => router.push("/agent-store")}
+              >
+                Browse Agents
+              </Button>
+              <Button variant="outline" onClick={() => router.push("/deploy")}>
+                Deploy New Agent
+              </Button>
+            </div>
+          </motion.div>
         </div>
       </div>
     );

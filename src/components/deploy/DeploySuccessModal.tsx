@@ -255,11 +255,11 @@ const DeploySuccessModal: React.FC<DeploySuccessModalProps> = ({
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => {
-                      // Navigate to agent details or marketplace
-                      window.open(`/agent/${nftId}`, "_blank");
+                      // Navigate to agent store instead of specific agent (which may not exist yet)
+                      window.location.href = "/agent-store";
                     }}
                   >
-                    🎨 View Your NFT
+                    🎨 View in Marketplace
                   </motion.button>
 
                   <motion.button

@@ -8,25 +8,25 @@ The existing solutions are often fragmented, siloed, or simply do not have the a
 
 There's a growing demand for a secure, transparent, and scalable solution where AI agents can interact with the blockchain, execute smart contracts, and be seamlessly deployed across ecosystems.
 
-AgentChain is here to address that demand.
+MindMint is here to address that demand.
 
 #### **The Solution**
 
-AgentChain currently possesses the most sophisticated AI agent deployment framework in the blockchain space. AI agents deployed through AgentChain have capabilities that reach far beyond the current market standard and allow users to directly communicate and interact with the blockchain (and its data).
+MindMint currently possesses the most sophisticated AI agent deployment framework in the blockchain space. AI agents deployed through MindMint have capabilities that reach far beyond the current market standard and allow users to directly communicate and interact with the blockchain (and its data).
 
-The AgentChain is an all-in-one platform where users can mint, deploy, and interact with advanced AI agents that are fully integrated with blockchain technology. These AI agents are capable of providing real-time insights, crypto functionalities, and decentralized services, while being completely autonomous and deployable in decentralized environments.
+The MindMint is an all-in-one platform where users can mint, deploy, and interact with advanced AI agents that are fully integrated with blockchain technology. These AI agents are capable of providing real-time insights, crypto functionalities, and decentralized services, while being completely autonomous and deployable in decentralized environments.
 
 We provide a versatile, transparent, and secure framework for deploying AI agents on blockchain networks such as Solana and Ethereum Virtual Machine (EVM)-compatible chains.
 
-With AgentChain, businesses and individuals can deploy decentralized, LLM-based AI agents that are fully customizable and offer unmatched functionality—such as real-time blockchain data retrieval, spotting trends, token analytics and research, sniping alerts, AI-generated insights based on wallet activity, and so much more.
+With MindMint, businesses and individuals can deploy decentralized, LLM-based AI agents that are fully customizable and offer unmatched functionality—such as real-time blockchain data retrieval, spotting trends, token analytics and research, sniping alerts, AI-generated insights based on wallet activity, and so much more.
 
 Once deployed, these agents can interact with decentralized applications and users, providing a personalized and powerful solution.
 
 #### **Why Us**
 
-No AI Agent deployment framework in the blockchain world is as advanced and sophisticated as the AgentChain framework. This is the reason AgentChain stands out as the most advanced and user-friendly platform for deploying decentralized AI agents.
+No AI Agent deployment framework in the blockchain world is as advanced and sophisticated as the MindMint framework. This is the reason MindMint stands out as the most advanced and user-friendly platform for deploying decentralized AI agents.
 
-1. Interconnected AI Agents: AgentChain offers a suite of four foundational agents that cater to different blockchain functionalities. These include Solana-based and EVM-based bots, a Trade Bot, and a Generalist Blockchain Bot. Each of these bots is designed to be extremely powerful and versatile, offering capabilities like fetching real-time blockchain data, advanced token analytics, sniping alerts, and more.
+1. Interconnected AI Agents: MindMint offers a suite of four foundational agents that cater to different blockchain functionalities. These include Solana-based and EVM-based bots, a Trade Bot, and a Generalist Blockchain Bot. Each of these bots is designed to be extremely powerful and versatile, offering capabilities like fetching real-time blockchain data, advanced token analytics, sniping alerts, and more.
 
 2. Advanced Crypto Functionalities: These bots don’t just interact with the blockchain—they bring real-time insights to your fingertips. For example, the Solana and EVM bots can provide token-specific analytics, market data visualizations, and even answer complex questions about specific tokens.
 
@@ -36,11 +36,11 @@ No AI Agent deployment framework in the blockchain world is as advanced and soph
 
 #### **What We Do**
 
-AgentChain is at the forefront of AI agent deployment in the blockchain world. Our platform enables users to deploy decentralized, LLM-based AI agents that are seamlessly integrated with blockchain functionalities. Here's how:
+MindMint is at the forefront of AI agent deployment in the blockchain world. Our platform enables users to deploy decentralized, LLM-based AI agents that are seamlessly integrated with blockchain functionalities. Here's how:
 
 1. **Deploying Decentralized AI Agents:** Our platform allows users to deploy highly advanced, LLM-based AI agents across multiple blockchain networks, such as Solana and EVM-compatible chains. These agents can execute smart contracts, interact with dApps, and provide detailed real-time data such as token analytics and chart visualizations.
 
-2. **Four Base Agents:** The core functionality of AgentChain revolves around four highly sophisticated AI agents:
+2. **Four Base Agents:** The core functionality of MindMint revolves around four highly sophisticated AI agents:
 
    - Solana-Based Agent: Capable of fetching real-time data from the Solana blockchain, analyzing token data, and providing insights.
 
@@ -52,15 +52,15 @@ AgentChain is at the forefront of AI agent deployment in the blockchain world. O
 
 3. **Minting and NFT Deployment:** When creating your own AI agent, you have the option to mint it as an NFT, ensuring ownership and creating new opportunities for monetization. Once minted, these agents can be deployed within decentralized platforms and traded on our marketplace.
 
-4. **Marketplace and Agentswap:** AgentChain includes a marketplace where users can list their AI agents, interact with others, and explore various types of AI bots that suit their needs. Additionally, Agentswap, a planned future release, will allow users to trade agent-specific tokens, further enhancing the platform’s ecosystem.
+4. **Marketplace and Agentswap:** MindMint includes a marketplace where users can list their AI agents, interact with others, and explore various types of AI bots that suit their needs. Additionally, Agentswap, a planned future release, will allow users to trade agent-specific tokens, further enhancing the platform’s ecosystem.
 
-AgentChain is the ultimate framework for deploying intelligent agents on the blockchain, providing a comprehensive, secure, and transparent platform for users to create, own, and monetize advanced AI agents.
+MindMint is the ultimate framework for deploying intelligent agents on the blockchain, providing a comprehensive, secure, and transparent platform for users to create, own, and monetize advanced AI agents.
 
-Whether you're looking to enhance your crypto strategy with a trade bot, dive deeper into blockchain data with our specialized agents, or simply deploy your own custom AI, AgentChain makes it all possible.
+Whether you're looking to enhance your crypto strategy with a trade bot, dive deeper into blockchain data with our specialized agents, or simply deploy your own custom AI, MindMint makes it all possible.
 
 How it works
 
-AgentChain is pioneering the future of Web3 AI Agents by evolving from "on-chain AI" to "AI-as-Chain," building the first fully integrated ecosystem for next-generation Web3 AI Agents.
+MindMint is pioneering the future of Web3 AI Agents by evolving from "on-chain AI" to "AI-as-Chain," building the first fully integrated ecosystem for next-generation Web3 AI Agents.
 
 Our mission is to revolutionize the core principles of Web3 AI Agents and develop advanced technologies for creating, distributing, and utilizing composable intelligent agents.
 

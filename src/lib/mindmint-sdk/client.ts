@@ -9,12 +9,12 @@ import {
   ClientConfig,
 } from "./types";
 
-export class AgentChainClient {
+export class MindMintClient {
   private baseUrl: string;
   private apiKey?: string;
 
   constructor(config: ClientConfig = {}) {
-    this.baseUrl = config.baseUrl || "https://api.agentchain.dev";
+    this.baseUrl = config.baseUrl || "https://api.mindmint.dev";
     this.apiKey = config.apiKey;
   }
 

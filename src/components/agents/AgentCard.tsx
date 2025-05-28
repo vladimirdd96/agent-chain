@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { AgentType } from "@/lib/agentchain-sdk/types";
+import { AgentType } from "@/lib/mindmint-sdk/types";
 import { PlaceholderImage } from "@/components/common/PlaceholderImage";
 
 interface AgentCardProps {

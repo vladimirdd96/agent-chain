@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { AgentChainClient } from "@/lib/agentchain-sdk";
+import { MindMintClient } from "@/lib/mindmint-sdk";
 
-export function useAgentChain() {
+export function useMindMint() {
   const client = useMemo(() => {
-    return new AgentChainClient({
+    return new MindMintClient({
       baseUrl: process.env.NEXT_PUBLIC_APP_URL + "/api",
     });
   }, []);

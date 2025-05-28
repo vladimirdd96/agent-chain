@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
-import { useAgentChain } from "./useAgentChain";
-import { WalletAnalytics } from "@/lib/agentchain-sdk/types";
+import { useMindMint } from "./useMindMint";
+import { WalletAnalytics } from "@/lib/mindmint-sdk/types";
 
 export function useWalletAnalytics() {
-  const client = useAgentChain();
+  const client = useMindMint();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [analytics, setAnalytics] = useState<WalletAnalytics | null>(null);

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useAgentChain } from "@/hooks/useAgentChain";
+import { useMindMint } from "@/hooks/useMindMint";
 
 interface Tool {
   name: string;
@@ -15,7 +15,7 @@ interface Tool {
 }
 
 export default function ToolsPage() {
-  const client = useAgentChain();
+  const client = useMindMint();
   const [tools, setTools] = useState<Record<string, Tool>>({});
   const [loading, setLoading] = useState(true);
 

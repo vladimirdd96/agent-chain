@@ -17,7 +17,7 @@ const Header = () => {
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex items-center">
                 <Link href="/" className="text-xl font-bold text-white">
-                  Agent Chain
+                  MindMint
                 </Link>
               </div>
 

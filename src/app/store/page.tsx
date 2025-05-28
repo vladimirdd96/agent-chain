@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAgents } from "@/hooks/useAgents";
 import { AgentCard } from "@/components/agents/AgentCard";
-import { AgentType } from "@/lib/agentchain-sdk/types";
+import { AgentType } from "@/lib/mindmint-sdk/types";
 
 export default function StorePage() {
   const { loading, error, listAgents } = useAgents();

@@ -1,4 +1,4 @@
-# AgentChain
+# MindMint
 
 A powerful decentralized AI agent deployment platform for Solana and EVM chains.
 
@@ -106,9 +106,9 @@ npm run dev
 ## SDK Usage
 
 ```typescript
-import { AgentChainClient } from "@agentchain/sdk";
+import { MindMintClient } from "@mindmint/sdk";
 
-const client = new AgentChainClient({
+const client = new MindMintClient({
   baseUrl: "http://localhost:3000/api",
   apiKey: "optional_api_key",
 });

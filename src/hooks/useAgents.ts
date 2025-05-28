@@ -1,13 +1,13 @@
 import { useState, useCallback } from "react";
-import { useAgentChain } from "./useAgentChain";
+import { useMindMint } from "./useMindMint";
 import {
   AgentType,
   AgentWithStats,
   PaginationParams,
-} from "@/lib/agentchain-sdk/types";
+} from "@/lib/mindmint-sdk/types";
 
 export function useAgents() {
-  const client = useAgentChain();
+  const client = useMindMint();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

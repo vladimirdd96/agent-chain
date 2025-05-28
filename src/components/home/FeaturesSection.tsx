@@ -19,13 +19,12 @@ const features = [
   {
     title: "Customizable Chains",
     description:
-      "Build and customize agent chains to match your specific requirements",
+      "Build and customize AI agents to match your specific requirements",
     icon: "⚡",
   },
   {
     title: "Real-time Monitoring",
-    description:
-      "Track and analyze your agent chains' performance in real-time",
+    description: "Track and analyze your AI agents' performance in real-time",
     icon: "📊",
   },
   {
@@ -55,7 +54,7 @@ const FeaturesSection = () => {
             Powerful Features
           </h2>
           <p className="text-white/70 max-w-2xl mx-auto">
-            Everything you need to build and manage intelligent agent chains
+            Everything you need to build and manage intelligent AI agents
           </p>
         </motion.div>
 

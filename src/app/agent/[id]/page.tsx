@@ -7,7 +7,7 @@ import { useWalletAnalytics } from "@/hooks/useWalletAnalytics";
 import { useWallet } from "@/components/auth/hooks/useWallet";
 import { WalletAnalytics } from "@/components/wallet/WalletAnalytics";
 import { PlaceholderImage } from "@/components/common/PlaceholderImage";
-import { AgentWithStats } from "@/lib/agentchain-sdk/types";
+import { AgentWithStats } from "@/lib/mindmint-sdk/types";
 import WalletButton from "@/components/auth/WalletButton";
 
 interface AgentDetailPageProps {

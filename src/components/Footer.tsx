@@ -12,7 +12,7 @@ const Footer: FC = () => {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-white">Agent Chain</h3>
+            <h3 className="text-xl font-bold text-white">MindMint</h3>
             <p className="text-white/70">
               Building the future of automated AI agents
             </p>
@@ -74,7 +74,7 @@ const Footer: FC = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="https://twitter.com/agentchain"
+                  href="https://twitter.com/mindmint"
                   className="text-white/70 hover:text-white"
                 >
                   Twitter
@@ -82,7 +82,7 @@ const Footer: FC = () => {
               </li>
               <li>
                 <Link
-                  href="https://discord.gg/agentchain"
+                  href="https://discord.gg/mindmint"
                   className="text-white/70 hover:text-white"
                 >
                   Discord
@@ -90,7 +90,7 @@ const Footer: FC = () => {
               </li>
               <li>
                 <Link
-                  href="https://github.com/agentchain"
+                  href="https://github.com/mindmint"
                   className="text-white/70 hover:text-white"
                 >
                   GitHub
@@ -101,7 +101,7 @@ const Footer: FC = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-white/10 text-center text-white/50">
-          <p>&copy; {currentYear} Agent Chain. All rights reserved.</p>
+          <p>&copy; {currentYear} MindMint. All rights reserved.</p>
         </div>
       </div>
     </footer>

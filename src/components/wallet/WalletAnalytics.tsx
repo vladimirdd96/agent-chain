@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { WalletAnalytics as WalletAnalyticsType } from "@/lib/agentchain-sdk/types";
+import { WalletAnalytics as WalletAnalyticsType } from "@/lib/mindmint-sdk/types";
 
 interface WalletAnalyticsProps {
   analytics: WalletAnalyticsType;

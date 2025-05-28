@@ -1,4 +1,4 @@
-# AgentChain – Cursor Full Project Prompt
+# MindMint – Cursor Full Project Prompt
 
 ## 🧱 Project Setup Rules
 
@@ -82,7 +82,7 @@
 
 ### SDK Design
 
-- TypeScript SDK should be built in `/lib/agentchain-sdk`
+- TypeScript SDK should be built in `/lib/mindmint-sdk`
 - SDK must:
   - Only expose public APIs (no keys, no secrets)
   - Be exportable as a standalone package
@@ -119,12 +119,12 @@
 - Mobile responsiveness supported
 - Everything typed strictly (TypeScript strict mode)
 - All routes & SDK methods must be documented
-- Cursor must use Moralis’ official SDK/methods when possible
+- Cursor must use Moralis' official SDK/methods when possible
 - Each deployed agent must be fully usable from UI (no placeholder features)
 
 ---
 
-**Goal:** Build AgentChain – a powerful decentralized AI agent deployment platform for Solana and EVM, with real blockchain integrations, wallet auth, NFT-based agents, and an SDK for others to use. Match the feature set of Deepcore.top but improve the architecture, design, and extensibility.
+**Goal:** Build MindMint – a powerful decentralized AI agent deployment platform for Solana and EVM, with real blockchain integrations, wallet auth, NFT-based agents, and an SDK for others to use. Match the feature set of Deepcore.top but improve the architecture, design, and extensibility.
 
 ---
 

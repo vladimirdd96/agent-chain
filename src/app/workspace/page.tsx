@@ -7,7 +7,7 @@ import { useWalletAnalytics } from "@/hooks/useWalletAnalytics";
 import { useAgents } from "@/hooks/useAgents";
 import { WalletAnalytics } from "@/components/wallet/WalletAnalytics";
 import { AgentCard } from "@/components/agents/AgentCard";
-import { AgentType } from "@/lib/agentchain-sdk/types";
+import { AgentType } from "@/lib/mindmint-sdk/types";
 
 export default function WorkspacePage() {
   const { connected, publicKey } = useWallet();

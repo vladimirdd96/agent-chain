@@ -41,6 +41,12 @@ const Header = () => {
                 >
                   Agent Store
                 </Link>
+                <Link
+                  href="/mcp-store"
+                  className="text-white/70 hover:text-white"
+                >
+                  MCP Store
+                </Link>
                 <Link href="/tools" className="text-white/70 hover:text-white">
                   Tools
                 </Link>
@@ -66,6 +72,13 @@ const Header = () => {
                 className="block text-white/70 hover:text-white py-2"
               >
                 Agent Store
+              </Disclosure.Button>
+              <Disclosure.Button
+                as={Link}
+                href="/mcp-store"
+                className="block text-white/70 hover:text-white py-2"
+              >
+                MCP Store
               </Disclosure.Button>
               <Disclosure.Button
                 as={Link}

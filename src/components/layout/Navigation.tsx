@@ -23,6 +23,7 @@ export function Navigation() {
   const navItems = [
     { name: "WorkSpace", href: "/workspace" },
     { name: "Agent Store", href: "/agent-store" },
+    { name: "MCP Store", href: "/mcp-store" },
     { name: "Tools", href: "/tools" },
     { name: "Docs", href: "/docs" },
   ];

@@ -1,4 +1,4 @@
-import { supabase } from "@/services/supabase/client";
+import { supabase, supabaseAdmin } from "@/services/supabase/client";
 import { PrebuiltAgent, AgentInteraction } from "@/types/agent";
 import { BlockchainDataService } from "@/services/moralis/blockchain-data";
 
@@ -164,7 +164,7 @@ export class PrebuiltAgentsService {
 
   static async mintAgent(agentId: string, ownerWallet: string): Promise<void> {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseAdmin
         .from("prebuilt_agents")
         .update({
           is_minted: true,
@@ -219,6 +219,10 @@ export class PrebuiltAgentsService {
       const agent = await this.getAgentById(agentId);
       if (!agent) {
         throw new Error("Agent not found");
+      }
+
+      if (!agent.capabilities) {
+        throw new Error("Agent has no capabilities");
       }
 
       const cap = agent.capabilities.find((c) => c.id === capability);

@@ -10,6 +10,11 @@ export interface AgentType {
   nft_mint_address?: string;
   created_at: string;
   updated_at: string;
+  // Additional fields for UI and prebuilt agents
+  chain?: string;
+  image_url?: string;
+  isPrebuilt?: boolean;
+  originalAgent?: any; // Contains the original prebuilt agent data
 }
 
 export interface AgentStats {

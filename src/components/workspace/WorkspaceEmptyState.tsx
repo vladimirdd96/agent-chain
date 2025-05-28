@@ -128,6 +128,29 @@ const WorkspaceEmptyState = () => {
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="relative max-w-2xl mx-auto"
     >
+      {/* Empty State Alert - Make it VERY clear */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="mb-8 p-4 bg-orange-900/20 border border-orange-500/40 rounded-xl"
+      >
+        <div className="flex items-center gap-3 text-center justify-center">
+          <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+            <span className="text-orange-400 text-lg font-bold">0</span>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-orange-300">
+              You Have No Agents Yet
+            </h2>
+            <p className="text-orange-200/80 text-sm">
+              Your workspace is empty - create your first AI agent to get
+              started
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Main Card */}
       <motion.div
         className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/60 via-purple-900/20 to-black/60 backdrop-blur-md border border-white/10 p-8 md:p-12 text-center"
@@ -175,7 +198,7 @@ const WorkspaceEmptyState = () => {
             className="mb-8"
           >
             <h2 className="text-xl font-semibold text-white mb-4">
-              No agents yet…
+              Ready to Get Started?
             </h2>
             <p className="text-white/80 mb-6 leading-relaxed">
               Mint your first AI Agent NFT and unlock live blockchain analytics,

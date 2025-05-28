@@ -7,6 +7,7 @@ import EnhancedAgentCard from "@/components/agent-store/EnhancedAgentCard";
 import AnimatedFilters from "@/components/agent-store/AnimatedFilters";
 import AnimatedStats from "@/components/agent-store/AnimatedStats";
 import ParticleBackground from "@/components/agent-store/ParticleBackground";
+import { useWallet } from "@/components/auth/hooks/useWallet";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
@@ -25,6 +26,7 @@ const chains = [
 ];
 
 export default function AgentStorePage() {
+  const { connected, publicKey } = useWallet();
   const [agents, setAgents] = useState<PrebuiltAgent[]>([]);
   const [filteredAgents, setFilteredAgents] = useState<PrebuiltAgent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,7 +38,7 @@ export default function AgentStorePage() {
 
   useEffect(() => {
     fetchAgents();
-  }, []);
+  }, [connected, publicKey]);
 
   useEffect(() => {
     filterAgents();
@@ -45,7 +47,14 @@ export default function AgentStorePage() {
   const fetchAgents = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/prebuilt-agents");
+
+      // Build URL with wallet parameter if connected
+      let url = "/api/agent-store";
+      if (connected && publicKey) {
+        url += `?user_wallet=${encodeURIComponent(publicKey.toString())}`;
+      }
+
+      const response = await fetch(url);
       const result = await response.json();
 
       if (result.success) {

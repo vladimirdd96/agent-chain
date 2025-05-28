@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import Moralis from "moralis";
 
+export const dynamic = "force-dynamic";
+
 // Initialize Moralis
 const initMoralis = async () => {
   if (!Moralis.Core.isStarted) {

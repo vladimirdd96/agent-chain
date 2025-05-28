@@ -12,7 +12,7 @@ CREATE TABLE agents (
     creator_wallet_address TEXT, -- Wallet address of the user who deployed it (can be null if predefined)
     is_public BOOLEAN DEFAULT TRUE, -- Whether the agent is listed in the public store
     is_nft BOOLEAN DEFAULT FALSE, -- Whether the agent has been minted as an NFT
-    nft_mint_address TEXT, -- Solana or EVM address of the minted NFT
+    nft_mint_address TEXT -- Solana or EVM address of the minted NFT
     -- Add other metadata fields as needed in the future, e.g.:
     -- functionality_flags JSONB, -- Store specific capabilities 
     -- usage_count BIGINT DEFAULT 0

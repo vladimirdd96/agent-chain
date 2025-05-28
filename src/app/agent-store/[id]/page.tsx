@@ -3,10 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useWallet } from "@/components/auth/hooks/useWallet";
 import { PrebuiltAgent, AgentCapability } from "@/types/agent";
+import ChatModal from "@/components/agent-store/ChatModal";
+import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 
 export default function AgentDetailPage() {
   const params = useParams();
+  const { connected, publicKey } = useWallet();
   const [agent, setAgent] = useState<PrebuiltAgent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,35 +19,40 @@ export default function AgentDetailPage() {
   const [activeCapability, setActiveCapability] = useState<string | null>(null);
   const [liveData, setLiveData] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(false);
-
-  useEffect(() => {
-    if (params.id) {
-      fetchAgent();
-    }
-  }, [params.id]);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const fetchAgent = async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/prebuilt-agents/${params.id}`);
-      const result = await response.json();
 
+      if (!response.ok) {
+        throw new Error("Failed to fetch agent details");
+      }
+
+      const result = await response.json();
       if (result.success) {
         setAgent(result.data);
-        setError(null);
       } else {
-        setError(result.error || "Agent not found");
+        throw new Error(result.error || "Failed to fetch agent");
       }
     } catch (err) {
-      console.error("Error fetching agent:", err);
-      setError("Failed to load agent details");
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchAgent();
+  }, [params.id]);
+
   const handleMint = async () => {
-    // In a real app, this would connect to wallet and handle the actual minting
+    if (!connected || !publicKey) {
+      alert("Please connect your wallet first!");
+      return;
+    }
+
     try {
       setMinting(true);
       const response = await fetch(`/api/prebuilt-agents/${params.id}`, {
@@ -52,7 +62,7 @@ export default function AgentDetailPage() {
         },
         body: JSON.stringify({
           action: "mint",
-          walletAddress: "0x1234567890123456789012345678901234567890", // Mock wallet
+          walletAddress: publicKey,
         }),
       });
 
@@ -72,9 +82,18 @@ export default function AgentDetailPage() {
     }
   };
 
+  const handleTryFreeVersion = () => {
+    setIsChatOpen(true);
+  };
+
   const demonstrateCapability = async (capability: AgentCapability) => {
     if (capability.requiresMinting && !agent?.isMinted) {
       alert("This capability requires minting the agent first!");
+      return;
+    }
+
+    if (!connected || !publicKey) {
+      alert("Please connect your wallet to use this feature!");
       return;
     }
 
@@ -95,7 +114,7 @@ export default function AgentDetailPage() {
         },
         body: JSON.stringify({
           capability: capability.id,
-          walletAddress: "0x1234567890123456789012345678901234567890",
+          walletAddress: publicKey,
           ...demoParams,
         }),
       });
@@ -141,12 +160,10 @@ export default function AgentDetailPage() {
     );
   }
 
-  const unlockedCapabilities = agent.capabilities.filter(
-    (cap) => !cap.requiresMinting
-  );
-  const premiumCapabilities = agent.capabilities.filter(
-    (cap) => cap.requiresMinting
-  );
+  const unlockedCapabilities =
+    agent?.capabilities?.filter((cap) => !cap.requiresMinting) || [];
+  const premiumCapabilities =
+    agent?.capabilities?.filter((cap) => cap.requiresMinting) || [];
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -224,6 +241,17 @@ export default function AgentDetailPage() {
               <div className="text-white/60">Minting Price</div>
             </div>
 
+            {/* Try Free Version Button - Always visible */}
+            <motion.button
+              onClick={handleTryFreeVersion}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 mb-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 border border-green-500/30 hover:border-green-400/50 rounded-lg text-green-300 hover:text-green-200 text-sm font-medium transition-all duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <ChatBubbleLeftRightIcon className="w-4 h-4" />
+              Try Free Version
+            </motion.button>
+
             {agent.isMinted ? (
               <div className="text-center">
                 <div className="mb-4 p-4 bg-green-500/20 rounded-lg border border-green-500/30">
@@ -239,6 +267,23 @@ export default function AgentDetailPage() {
                   className="w-full py-3 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed"
                 >
                   Already Owned
+                </button>
+              </div>
+            ) : !connected ? (
+              <div className="text-center">
+                <div className="mb-4 text-sm text-white/60">
+                  Connect your wallet to mint this agent as an NFT
+                </div>
+                <div className="mb-4 p-3 bg-yellow-500/20 rounded-lg border border-yellow-500/30">
+                  <div className="text-yellow-400 text-sm">
+                    ⚠️ Wallet connection required
+                  </div>
+                </div>
+                <button
+                  disabled
+                  className="w-full py-3 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed"
+                >
+                  Connect Wallet First
                 </button>
               </div>
             ) : (
@@ -354,6 +399,15 @@ export default function AgentDetailPage() {
             {JSON.stringify(liveData, null, 2)}
           </pre>
         </div>
+      )}
+
+      {/* Chat Modal */}
+      {agent && (
+        <ChatModal
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+          agent={agent}
+        />
       )}
     </div>
   );

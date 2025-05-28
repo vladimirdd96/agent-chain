@@ -42,11 +42,11 @@ export async function POST(request: Request) {
         {
           name,
           description,
-          type,
-          parameters,
-          creator_wallet: walletAddress,
+          agent_type: type,
+          chain: type === "solana" ? "Solana" : "EVM",
+          creator_wallet_address: walletAddress,
           is_public: true,
-          status: "pending",
+          is_nft: false,
         },
       ])
       .select()
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
         .from("agents")
         .update({
           nft_mint_address: nft.address.toString(),
-          status: "active",
+          is_nft: true,
         })
         .eq("id", agent.id);
 
@@ -86,17 +86,13 @@ export async function POST(request: Request) {
         agent: {
           ...agent,
           nft_mint_address: nft.address.toString(),
+          is_nft: true,
         },
       });
     } catch (nftError) {
       console.error("NFT minting error:", nftError);
 
-      // Update agent status to failed
-      await supabase
-        .from("agents")
-        .update({ status: "failed" })
-        .eq("id", agent.id);
-
+      // Agent remains with is_nft: false if minting fails
       return NextResponse.json(
         { error: "Failed to mint agent NFT" },
         { status: 500 }

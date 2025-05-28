@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "src/app/api/**/route.ts": {
+      "maxDuration": 10
+    }
+  },
+  "crons": [],
+  "env": {
+    "NODE_OPTIONS": "--max_old_space_size=4096"
+  }
+}

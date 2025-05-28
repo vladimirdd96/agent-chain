@@ -6,13 +6,23 @@ export interface PrebuiltAgent {
   features: string[];
   visualRepresentation: string;
   avatar: string;
-  category: "Analytics" | "DeFi" | "NFT" | "Trading" | "Research";
+  category:
+    | "Analytics"
+    | "DeFi"
+    | "NFT"
+    | "Trading"
+    | "Research"
+    | "Generalist";
   isMinted: boolean;
   owner?: string;
-  mintDate?: Date;
+  ownerWallet?: string;
+  mintDate?: Date | string;
   price: number;
-  interactionHistory: AgentInteraction[];
-  capabilities: AgentCapability[];
+  interactionHistory?: AgentInteraction[];
+  capabilities?: AgentCapability[];
+  type?: "prebuilt" | "minted";
+  nftMintAddress?: string;
+  isOwned?: boolean;
 }
 
 export interface AgentCapability {

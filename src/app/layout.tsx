@@ -7,8 +7,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MindMint - Web3 AI Agent Platform",
-  description: "Deploy and manage AI agents on Solana and EVM chains",
+  title: "AgentChain - Web3 AI Agent Platform",
+  description:
+    "Deploy and manage AI agents on Solana and EVM chains - The future of decentralized AI",
 };
 
 export default function RootLayout({
@@ -21,7 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-black min-h-screen text-white`}>
         <WalletContextProvider>
           <Navigation />
-          <main className="pt-16">{children}</main>
+          <main className="pt-20">{children}</main>
         </WalletContextProvider>
       </body>
     </html>

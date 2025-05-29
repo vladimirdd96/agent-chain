@@ -102,8 +102,20 @@ export function AgentChatModal({
               content: inputValue,
             },
           ],
+          agentContext: {
+            name: agent.name,
+            description: agent.description,
+            category:
+              "type" in agent
+                ? agent.type
+                : (agent as PrebuiltAgent).category || "Generalist",
+            isOwned: isPremium,
+          },
           isPremium,
-          agentType: agent.name,
+          agentType:
+            "type" in agent
+              ? agent.type
+              : (agent as PrebuiltAgent).category || "Generalist",
         }),
       });
 

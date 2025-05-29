@@ -8,6 +8,8 @@ import { useWallet } from "@/components/auth/hooks/useWallet";
 import { PrebuiltAgent, AgentCapability } from "@/types/agent";
 import ChatModal from "@/components/agent-store/ChatModal";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
+import { MintSuccessModal } from "@/components/ui/MintSuccessModal";
+import { useToast } from "@/components/ui/Toast";
 
 export default function AgentDetailPage() {
   const params = useParams();
@@ -20,6 +22,9 @@ export default function AgentDetailPage() {
   const [liveData, setLiveData] = useState<any>(null);
   const [dataLoading, setDataLoading] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showMintSuccess, setShowMintSuccess] = useState(false);
+
+  const toast = useToast();
 
   const fetchAgent = async () => {
     try {
@@ -56,7 +61,11 @@ export default function AgentDetailPage() {
 
   const handleMint = async () => {
     if (!connected || !publicKey) {
-      alert("Please connect your wallet first!");
+      toast.warning(
+        "Wallet Required",
+        "Please connect your wallet to mint this agent.",
+        { duration: 6000 }
+      );
       return;
     }
 
@@ -77,13 +86,42 @@ export default function AgentDetailPage() {
       if (result.success) {
         // Refresh agent data to show minted status
         await fetchAgent();
-        alert("Agent minted successfully! 🎉");
+
+        // Show the beautiful mint success modal instead of basic alert
+        setShowMintSuccess(true);
       } else {
-        alert("Failed to mint agent: " + result.error);
+        toast.error(
+          "Minting Failed",
+          result.error ||
+            "An unexpected error occurred while minting the agent. Please try again.",
+          {
+            duration: 8000,
+            actions: [
+              {
+                label: "Retry",
+                onClick: () => handleMint(),
+                variant: "primary",
+              },
+            ],
+          }
+        );
       }
     } catch (err) {
       console.error("Error minting agent:", err);
-      alert("Failed to mint agent");
+      toast.error(
+        "Network Error",
+        "Failed to connect to the server. Please check your connection and try again.",
+        {
+          duration: 8000,
+          actions: [
+            {
+              label: "Retry",
+              onClick: () => handleMint(),
+              variant: "primary",
+            },
+          ],
+        }
+      );
     } finally {
       setMinting(false);
     }
@@ -456,6 +494,29 @@ export default function AgentDetailPage() {
           agent={agent}
         />
       )}
+
+      {/* Mint Success Modal */}
+      {agent && (
+        <MintSuccessModal
+          isOpen={showMintSuccess}
+          onClose={() => setShowMintSuccess(false)}
+          agentName={agent.name}
+          agentPrice={agent.price}
+          agentType={agent.category}
+          agentImage={agent.visualRepresentation}
+          onUseAgent={() => {
+            setShowMintSuccess(false);
+            setIsChatOpen(true);
+          }}
+          onViewInStore={() => {
+            setShowMintSuccess(false);
+            window.location.reload(); // Refresh to show updated ownership status
+          }}
+        />
+      )}
+
+      {/* Toast Notifications */}
+      <toast.ToastContainer />
     </div>
   );
 }

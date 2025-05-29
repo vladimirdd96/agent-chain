@@ -322,6 +322,61 @@ export const prebuiltAgents: PrebuiltAgent[] = [
       },
     ],
   },
+  {
+    id: "deep-research-agent",
+    name: "Deep Research Agent",
+    description:
+      "A specialized project research assistant designed for the crypto space that generates comprehensive reports on any topic following a workflow similar to OpenAI and Gemini Deep Research.",
+    chainCompatibility: ["Ethereum", "Solana", "Polygon", "Binance Smart Chain", "Arbitrum", "Avalanche"],
+    features: [
+      "Customizable research workflows",
+      "Multi-model integration with OpenAI o1-preview for deep reasoning",
+      "Advanced data sourcing from multiple APIs and web sources",
+      "Structured report generation with executive summaries",
+      "Project due diligence analysis",
+      "Market analysis and competitor research",
+      "Technology evaluation and risk assessment",
+      "Real-time data integration and fact-checking",
+    ],
+    visualRepresentation: "🔬",
+    avatar: "/images/agents/deep-research.svg",
+    category: "Research",
+    isMinted: false,
+    price: 0.8, // in ETH
+    interactionHistory: [],
+    capabilities: [
+      {
+        id: "quick-research",
+        name: "Quick Research Summary",
+        description: "Generate a brief research summary on any crypto project or topic",
+        requiresMinting: false,
+      },
+      {
+        id: "comprehensive-report",
+        name: "Comprehensive Research Report",
+        description: "Generate detailed research reports with multi-dimensional analysis, risk assessment, and market intelligence",
+        requiresMinting: true,
+      },
+      {
+        id: "due-diligence",
+        name: "Project Due Diligence",
+        description: "In-depth due diligence analysis including tokenomics, team background, and technical assessment",
+        requiresMinting: true,
+      },
+      {
+        id: "market-analysis",
+        name: "Advanced Market Analysis",
+        description: "Comprehensive market analysis with competitive landscape, trend analysis, and growth projections",
+        requiresMinting: true,
+      },
+      {
+        id: "real-time-monitoring",
+        name: "Real-time Project Monitoring",
+        description: "Continuous monitoring and alerts for project developments, news, and market changes",
+        requiresMinting: true,
+      },
+    ],
+  },
 ];
 
 export const getAgentById = (id: string): PrebuiltAgent | undefined => {

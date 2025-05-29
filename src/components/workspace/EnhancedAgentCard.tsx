@@ -117,10 +117,13 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
           `${agent.name} is now available in the public store for others to mint and use.`,
           {
             duration: 7000,
-            action: {
-              label: "View in Store",
-              onClick: () => window.open("/agent-store", "_blank"),
-            },
+            actions: [
+              {
+                label: "View in Store",
+                onClick: () => window.open("/agent-store", "_blank"),
+                variant: "primary",
+              },
+            ],
           }
         );
 

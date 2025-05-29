@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import { Navigation } from "@/components/layout/Navigation";
 import { WalletContextProvider } from "@/components/WalletContextProvider";
 import { ToastProvider } from "@/components/providers/ToastProvider";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-montserrat",
+});
 
 export const metadata: Metadata = {
   title: "MindMint - Web3 AI Agent Platform",
@@ -19,7 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-black min-h-screen text-white`}>
+      <body
+        className={`${montserrat.variable} font-sans bg-black min-h-screen text-white`}
+      >
         <ToastProvider>
           <WalletContextProvider>
             <Navigation />

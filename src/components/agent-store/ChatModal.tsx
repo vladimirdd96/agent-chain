@@ -8,8 +8,10 @@ import {
   SparklesIcon,
   UserIcon,
   ChevronDownIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PrebuiltAgent } from "@/types/agent";
+import { useWallet } from "@/components/auth/hooks/useWallet";
 
 interface Message {
   id: string;
@@ -25,13 +27,19 @@ interface ChatModalProps {
 }
 
 const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose, agent }) => {
+  const { connected } = useWallet();
+  const isOwned = (connected && agent.isOwned) || agent.isMinted;
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       role: "assistant",
       content: `Hello! I'm ${
         agent.name
-      }, your AI assistant. I specialize in ${agent.category.toLowerCase()} and I'm here to help you with ${agent.description.toLowerCase()}. How can I assist you today?`,
+      }, your AI assistant. I specialize in ${agent.category.toLowerCase()} and I'm here to help you with ${agent.description.toLowerCase()}. ${
+        isOwned
+          ? "As an owner, you have full access to all my premium features and capabilities!"
+          : "You're currently using the free version with limited features. Consider minting me as an NFT to unlock my full potential!"
+      } How can I assist you today?`,
       timestamp: new Date(),
     },
   ]);
@@ -84,7 +92,10 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose, agent }) => {
             description: agent.description,
             category: agent.category,
             capabilities: agent.capabilities,
+            isOwned,
           },
+          isPremium: isOwned,
+          agentType: agent.category,
         }),
       });
 
@@ -159,7 +170,15 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose, agent }) => {
               <div>
                 <h3 className="text-xl font-bold text-white">{agent.name}</h3>
                 <p className="text-sm text-white/60">
-                  {agent.category} • Try Free Version
+                  {agent.category} •{" "}
+                  {isOwned ? (
+                    <span className="flex items-center gap-1 text-green-400">
+                      <CheckCircleIcon className="w-3 h-3" />
+                      Premium Access
+                    </span>
+                  ) : (
+                    "Try Free Version"
+                  )}
                 </p>
               </div>
             </div>
@@ -284,7 +303,11 @@ const ChatModal: React.FC<ChatModalProps> = ({ isOpen, onClose, agent }) => {
             <div className="flex items-center justify-between mt-3 text-xs text-white/50">
               <div className="flex items-center gap-2">
                 <SparklesIcon className="w-4 h-4" />
-                <span>Free version • Powered by OpenAI</span>
+                <span>
+                  {isOwned
+                    ? "Premium access • Full features unlocked"
+                    : "Free version • Limited features"}
+                </span>
               </div>
               <span>Press Enter to send, Shift+Enter for new line</span>
             </div>

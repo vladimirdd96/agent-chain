@@ -13,7 +13,10 @@ import {
   StarIcon,
   ArrowRightIcon,
   ChatBubbleLeftRightIcon,
+  CheckCircleIcon,
+  PlayIcon,
 } from "@heroicons/react/24/outline";
+import { useWallet } from "@/components/auth/hooks/useWallet";
 
 interface EnhancedAgentCardProps {
   agent: PrebuiltAgent;
@@ -24,6 +27,7 @@ const EnhancedAgentCard: React.FC<EnhancedAgentCardProps> = ({
   agent,
   index = 0,
 }) => {
+  const { connected, publicKey } = useWallet();
   const [isHovered, setIsHovered] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -37,6 +41,7 @@ const EnhancedAgentCard: React.FC<EnhancedAgentCardProps> = ({
     isMinted,
     price,
     capabilities,
+    isOwned,
   } = agent;
 
   const unlockedCapabilities = (capabilities || []).filter(
@@ -48,34 +53,75 @@ const EnhancedAgentCard: React.FC<EnhancedAgentCardProps> = ({
 
   // Determine badge based on agent status
   const getBadge = () => {
-    if (isMinted)
+    // If user owns the agent OR if agent is minted by current user, show "Owned" badge
+    if ((connected && isOwned) || isMinted)
+      return {
+        text: "Owned",
+        color: "from-green-400 to-emerald-500",
+        icon: CheckCircleIcon,
+      };
+
+    // If agent is minted by someone else (not current user), show "Minted" badge
+    if (agent.isMintedByOthers)
       return {
         text: "Minted",
-        color: "from-green-400 to-emerald-500",
+        color: "from-blue-400 to-indigo-500",
         icon: ShieldCheckIcon,
       };
+
+    // If has premium capabilities, show "Premium" badge
     if (premiumCapabilities.length > unlockedCapabilities.length)
       return {
         text: "Premium",
         color: "from-purple-400 to-violet-500",
         icon: SparklesIcon,
       };
+
+    // If featured (top 3), show "Featured" badge
     if (index < 3)
       return {
         text: "Featured",
         color: "from-yellow-400 to-orange-500",
         icon: StarIcon,
       };
+
     return null;
   };
 
   const badge = getBadge();
 
-  const handleTryFreeVersion = (e: React.MouseEvent) => {
+  const handleActionButtonClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsChatOpen(true);
+
+    if ((connected && isOwned) || isMinted) {
+      // If user owns the agent or agent is minted, open chat directly with full functionality
+      setIsChatOpen(true);
+    } else {
+      // If user doesn't own the agent, open free version
+      setIsChatOpen(true);
+    }
   };
+
+  const getActionButtonConfig = () => {
+    if ((connected && isOwned) || isMinted) {
+      return {
+        text: "Use Agent",
+        icon: PlayIcon,
+        className:
+          "w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 border border-blue-500/30 hover:border-blue-400/50 rounded-xl text-blue-300 hover:text-blue-200 text-sm font-medium transition-all duration-300",
+      };
+    } else {
+      return {
+        text: "Try Free Version",
+        icon: ChatBubbleLeftRightIcon,
+        className:
+          "w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 border border-green-500/30 hover:border-green-400/50 rounded-xl text-green-300 hover:text-green-200 text-sm font-medium transition-all duration-300",
+      };
+    }
+  };
+
+  const actionButton = getActionButtonConfig();
 
   return (
     <>
@@ -252,13 +298,13 @@ const EnhancedAgentCard: React.FC<EnhancedAgentCardProps> = ({
           <div className="p-6 pt-0 space-y-3">
             {/* Try Free Version Button */}
             <motion.button
-              onClick={handleTryFreeVersion}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 border border-green-500/30 hover:border-green-400/50 rounded-xl text-green-300 hover:text-green-200 text-sm font-medium transition-all duration-300"
+              onClick={handleActionButtonClick}
+              className={actionButton.className}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <ChatBubbleLeftRightIcon className="w-4 h-4" />
-              Try Free Version
+              <actionButton.icon className="w-4 h-4" />
+              {actionButton.text}
             </motion.button>
 
             {/* Explore Agent Link */}
@@ -268,14 +314,16 @@ const EnhancedAgentCard: React.FC<EnhancedAgentCardProps> = ({
                 whileHover={{ scale: 1.02 }}
               >
                 <span className="text-sm text-white/70 font-medium">
-                  {isMinted ? "View Dashboard" : "Explore Agent"}
+                  {(connected && isOwned) || isMinted
+                    ? "Manage Agent"
+                    : "Explore Agent"}
                 </span>
 
                 <motion.div
                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-xl border border-white/20 text-white text-sm font-medium group-hover:from-purple-500/30 group-hover:to-blue-500/30 group-hover:border-white/30 transition-all duration-300"
                   whileHover={{ x: 4 }}
                 >
-                  Explore
+                  {(connected && isOwned) || isMinted ? "Manage" : "Explore"}
                   <ArrowRightIcon className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </motion.div>
               </motion.div>

@@ -24,7 +24,14 @@ export default function AgentDetailPage() {
   const fetchAgent = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/prebuilt-agents/${params.id}`);
+
+      // Build URL with user wallet for proper ownership detection
+      let url = `/api/prebuilt-agents/${params.id}`;
+      if (connected && publicKey) {
+        url += `?user_wallet=${encodeURIComponent(publicKey.toString())}`;
+      }
+
+      const response = await fetch(url);
 
       if (!response.ok) {
         throw new Error("Failed to fetch agent details");
@@ -45,7 +52,7 @@ export default function AgentDetailPage() {
 
   useEffect(() => {
     fetchAgent();
-  }, [params.id]);
+  }, [params.id, connected, publicKey]);
 
   const handleMint = async () => {
     if (!connected || !publicKey) {
@@ -87,8 +94,11 @@ export default function AgentDetailPage() {
   };
 
   const demonstrateCapability = async (capability: AgentCapability) => {
-    if (capability.requiresMinting && !agent?.isMinted) {
-      alert("This capability requires minting the agent first!");
+    if (
+      capability.requiresMinting &&
+      !((connected && agent?.isOwned) || agent?.isMinted)
+    ) {
+      alert("This capability requires owning the agent first!");
       return;
     }
 
@@ -241,63 +251,100 @@ export default function AgentDetailPage() {
               <div className="text-white/60">Minting Price</div>
             </div>
 
-            {/* Try Free Version Button - Always visible */}
-            <motion.button
-              onClick={handleTryFreeVersion}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 mb-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 border border-green-500/30 hover:border-green-400/50 rounded-lg text-green-300 hover:text-green-200 text-sm font-medium transition-all duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <ChatBubbleLeftRightIcon className="w-4 h-4" />
-              Try Free Version
-            </motion.button>
+            {/* Action Buttons Based on Ownership */}
+            {(connected && agent.isOwned) || agent.isMinted ? (
+              // User owns this agent or agent is minted by current user - show full access controls
+              <div className="space-y-4">
+                <motion.button
+                  onClick={handleTryFreeVersion}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500/20 to-purple-500/20 hover:from-blue-500/30 hover:to-purple-500/30 border border-blue-500/30 hover:border-blue-400/50 rounded-lg text-blue-300 hover:text-blue-200 text-sm font-medium transition-all duration-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                  Use Agent
+                </motion.button>
 
-            {agent.isMinted ? (
-              <div className="text-center">
-                <div className="mb-4 p-4 bg-green-500/20 rounded-lg border border-green-500/30">
-                  <div className="text-green-400 font-semibold mb-1">
-                    🎉 Already Minted!
-                  </div>
-                  <div className="text-green-300 text-sm">
-                    All features unlocked
+                <div className="text-center">
+                  <div className="mb-4 p-4 bg-green-500/20 rounded-lg border border-green-500/30">
+                    <div className="text-green-400 font-semibold mb-1">
+                      🎉 You Own This Agent!
+                    </div>
+                    <div className="text-green-300 text-sm">
+                      Full premium access unlocked
+                    </div>
                   </div>
                 </div>
-                <button
-                  disabled
-                  className="w-full py-3 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed"
-                >
-                  Already Owned
-                </button>
               </div>
-            ) : !connected ? (
-              <div className="text-center">
-                <div className="mb-4 text-sm text-white/60">
-                  Connect your wallet to mint this agent as an NFT
-                </div>
-                <div className="mb-4 p-3 bg-yellow-500/20 rounded-lg border border-yellow-500/30">
-                  <div className="text-yellow-400 text-sm">
-                    ⚠️ Wallet connection required
+            ) : agent.isMintedByOthers ? (
+              // Agent is minted by someone else - show limited access
+              <div className="space-y-4">
+                <motion.button
+                  onClick={handleTryFreeVersion}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 border border-green-500/30 hover:border-green-400/50 rounded-lg text-green-300 hover:text-green-200 text-sm font-medium transition-all duration-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                  Try Free Version
+                </motion.button>
+
+                <div className="text-center">
+                  <div className="mb-4 p-4 bg-blue-500/20 rounded-lg border border-blue-500/30">
+                    <div className="text-blue-400 font-semibold mb-1">
+                      🔒 Already Minted by Another User
+                    </div>
+                    <div className="text-blue-300 text-sm">
+                      This agent is owned by someone else. You can only use the
+                      free version.
+                    </div>
                   </div>
                 </div>
-                <button
-                  disabled
-                  className="w-full py-3 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed"
-                >
-                  Connect Wallet First
-                </button>
               </div>
             ) : (
-              <div className="text-center">
-                <div className="mb-4 text-sm text-white/60">
-                  Mint this agent as an NFT to unlock all premium features
-                </div>
-                <button
-                  onClick={handleMint}
-                  disabled={minting}
-                  className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              // User doesn't own this agent and it's not minted - show free trial + minting options
+              <div className="space-y-4">
+                <motion.button
+                  onClick={handleTryFreeVersion}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 hover:from-green-500/30 hover:to-emerald-500/30 border border-green-500/30 hover:border-green-400/50 rounded-lg text-green-300 hover:text-green-200 text-sm font-medium transition-all duration-300"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  {minting ? "Minting..." : "Mint Agent NFT"}
-                </button>
+                  <ChatBubbleLeftRightIcon className="w-4 h-4" />
+                  Try Free Version
+                </motion.button>
+
+                {!connected ? (
+                  <div className="text-center">
+                    <div className="mb-4 text-sm text-white/60">
+                      Connect your wallet to mint this agent as an NFT
+                    </div>
+                    <div className="mb-4 p-3 bg-yellow-500/20 rounded-lg border border-yellow-500/30">
+                      <div className="text-yellow-400 text-sm">
+                        ⚠️ Wallet connection required
+                      </div>
+                    </div>
+                    <button
+                      disabled
+                      className="w-full py-3 bg-gray-600 text-gray-400 rounded-lg cursor-not-allowed"
+                    >
+                      Connect Wallet First
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <div className="mb-4 text-sm text-white/60">
+                      Mint this agent as an NFT to unlock all premium features
+                    </div>
+                    <button
+                      onClick={handleMint}
+                      disabled={minting}
+                      className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {minting ? "Minting..." : "Mint Agent NFT"}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -375,15 +422,15 @@ export default function AgentDetailPage() {
                   onClick={() => demonstrateCapability(capability)}
                   disabled={
                     (dataLoading && activeCapability === capability.id) ||
-                    !agent.isMinted
+                    !((connected && agent.isOwned) || agent.isMinted)
                   }
                   className="text-sm text-purple-400 hover:text-purple-300 transition-colors disabled:opacity-50"
                 >
-                  {!agent.isMinted
-                    ? "Requires Minting"
+                  {!((connected && agent.isOwned) || agent.isMinted)
+                    ? "Requires Ownership"
                     : dataLoading && activeCapability === capability.id
                     ? "Loading..."
-                    : "Try Demo"}
+                    : "Use Feature"}
                 </button>
               </div>
             ))}

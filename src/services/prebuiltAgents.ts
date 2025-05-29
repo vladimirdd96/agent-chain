@@ -52,7 +52,10 @@ export class PrebuiltAgentsService {
     }
   }
 
-  static async getAgentById(id: string): Promise<PrebuiltAgent | null> {
+  static async getAgentById(
+    id: string,
+    userWallet?: string | null
+  ): Promise<PrebuiltAgent | null> {
     try {
       const { data: agent, error } = await supabase
         .from("prebuilt_agents")
@@ -83,10 +86,22 @@ export class PrebuiltAgentsService {
         visualRepresentation: agent.visual_representation,
         avatar: agent.avatar,
         category: agent.category,
-        isMinted: agent.is_minted,
+        isMinted:
+          userWallet && agent.is_minted && agent.owner_wallet === userWallet,
+        isMintedByOthers:
+          agent.is_minted && (!userWallet || agent.owner_wallet !== userWallet),
         owner: agent.owner_wallet,
+        ownerWallet: agent.owner_wallet,
         mintDate: agent.mint_date ? new Date(agent.mint_date) : undefined,
         price: parseFloat(agent.price),
+        type: "prebuilt" as const,
+        originalAgentId: agent.original_agent_id,
+        isDeployedPersonal: Boolean(agent.original_agent_id),
+        creatorWallet: agent.creator_wallet,
+        isOwned:
+          userWallet &&
+          ((agent.is_minted && agent.owner_wallet === userWallet) ||
+            (agent.original_agent_id && agent.creator_wallet === userWallet)),
         interactionHistory: agent.interactions.map((interaction: any) => ({
           id: interaction.id,
           agentId: interaction.agent_id,
@@ -213,10 +228,11 @@ export class PrebuiltAgentsService {
   static async getAgentLiveData(
     agentId: string,
     capability: string,
-    params: any = {}
+    params: any = {},
+    userWallet?: string | null
   ) {
     try {
-      const agent = await this.getAgentById(agentId);
+      const agent = await this.getAgentById(agentId, userWallet);
       if (!agent) {
         throw new Error("Agent not found");
       }
@@ -230,7 +246,7 @@ export class PrebuiltAgentsService {
         throw new Error("Capability not found");
       }
 
-      // Check if user has access to this capability
+      // Check if user has access to this capability (now uses user-specific ownership)
       if (cap.requiresMinting && !agent.isMinted) {
         throw new Error("This capability requires minting the agent");
       }

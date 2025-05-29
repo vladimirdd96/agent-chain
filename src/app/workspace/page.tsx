@@ -100,13 +100,35 @@ export default function WorkspacePage() {
       // Combine user-created agents and minted prebuilt agents owned by user
       const userCreatedAgents = userCreatedData.agents || [];
 
-      // Filter for both prebuilt agents owned by user AND user-minted agents
+      // Filter user-created agents to exclude deployed ones (is_public: true)
+      // Deployed agents should only appear as store entries, not personal workspace entries
+      const privateUserAgents = userCreatedAgents.filter(
+        (agent: any) => !agent.is_public
+      );
+
+      // Filter for prebuilt agents owned by user, user-minted agents, AND deployed personal agents
       const ownedPrebuiltAgents = (prebuiltData.data || []).filter(
-        (agent: any) =>
-          (agent.type === "prebuilt" &&
+        (agent: any) => {
+          // Original prebuilt agents that user has minted
+          const isOwnedPrebuilt =
+            agent.type === "prebuilt" &&
             agent.isMinted &&
-            agent.ownerWallet === publicKey) ||
-          (agent.type === "minted" && agent.ownerWallet === publicKey)
+            agent.ownerWallet === publicKey;
+
+          // User's own minted agents (personal agents they created and are NOT deployed to store)
+          const isOwnedMinted =
+            agent.type === "minted" &&
+            agent.ownerWallet === publicKey &&
+            !agent.isDeployedPersonal; // Exclude agents that are deployed to store
+
+          // Deployed personal agents (originally created by user, now in store)
+          const isDeployedPersonal =
+            agent.type === "prebuilt" &&
+            agent.isDeployedPersonal &&
+            agent.creatorWallet === publicKey; // Check creator wallet for deployed agents
+
+          return isOwnedPrebuilt || isOwnedMinted || isDeployedPersonal;
+        }
       );
 
       console.log(
@@ -122,29 +144,33 @@ export default function WorkspacePage() {
           description: agent.description,
           type: "blockchain", // Map to AgentType
           parameters: {},
-          creator_wallet: agent.ownerWallet,
+          creator_wallet: agent.ownerWallet || agent.creatorWallet, // Use creator wallet for deployed agents
           is_public: true,
           status: "active",
-          nft_mint_address: undefined, // Prebuilt agents don't have NFT addresses yet
+          nft_mint_address: agent.nftMintAddress || undefined,
           created_at: agent.mintDate,
           updated_at: agent.mintDate,
           // Additional UI fields
           chain: agent.chainCompatibility?.[0] || "Ethereum",
           image_url: agent.avatar,
-          // Mark as prebuilt for UI distinction
-          isPrebuilt: true,
+          // Mark as prebuilt for UI distinction, or deployed if it was user's personal agent
+          isPrebuilt: agent.type === "prebuilt" && !agent.isDeployedPersonal,
+          isDeployedPersonal: agent.isDeployedPersonal === true,
+          originalAgentId: agent.originalAgentId, // For deployed agents, reference to original
           originalAgent: agent,
         })
       );
 
       const allUserAgents = [
-        ...userCreatedAgents,
-        ...transformedPrebuiltAgents,
+        ...privateUserAgents, // Only private (non-deployed) personal agents
+        ...transformedPrebuiltAgents, // Store agents (prebuilt + deployed personal)
       ];
 
       setDebugInfo({
         publicKey,
-        userCreatedCount: userCreatedAgents.length,
+        userCreatedCount: privateUserAgents.length, // Only private agents
+        deployedAgentsFiltered:
+          userCreatedAgents.length - privateUserAgents.length,
         prebuiltCount: transformedPrebuiltAgents.length,
         totalCount: allUserAgents.length,
         userCreatedData,

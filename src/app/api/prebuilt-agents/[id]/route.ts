@@ -6,7 +6,13 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const agent = await PrebuiltAgentsService.getAgentById(params.id);
+    const searchParams = request.nextUrl.searchParams;
+    const userWallet = searchParams.get("user_wallet"); // Get user wallet for ownership determination
+
+    const agent = await PrebuiltAgentsService.getAgentById(
+      params.id,
+      userWallet
+    );
 
     if (!agent) {
       return NextResponse.json(

@@ -31,12 +31,15 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
 
   // Check if this is a prebuilt agent or personal agent
   const isPrebuiltAgent = (agent as any).isPrebuilt === true;
+  const isDeployedPersonal = (agent as any).isDeployedPersonal === true;
   const isPremiumMinted = Boolean(agent.nft_mint_address);
-  const isPersonalAgent = !isPrebuiltAgent && Boolean(agent.creator_wallet);
+  const isPersonalAgent =
+    !isPrebuiltAgent && !isDeployedPersonal && Boolean(agent.creator_wallet);
 
   // Personal agents are always premium (owned by creator)
   // Prebuilt agents are premium only if minted
-  const isPremium = isPersonalAgent || isPremiumMinted;
+  // Deployed personal agents are premium (user owns them in store)
+  const isPremium = isPersonalAgent || isPremiumMinted || isDeployedPersonal;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -189,7 +192,11 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
                     {agent.status}
                   </span>
                   <span className="px-2 py-1 text-xs font-medium text-white bg-purple-500/20 rounded-full border border-purple-500/30">
-                    {isPrebuiltAgent ? "Prebuilt" : "Personal"}
+                    {isPrebuiltAgent
+                      ? "Prebuilt"
+                      : isDeployedPersonal
+                      ? "Deployed"
+                      : "Personal"}
                   </span>
                 </div>
               </div>
@@ -286,7 +293,7 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
           )}
 
           {/* Store Deployment Badge */}
-          {isPersonalAgent && agent.is_public && (
+          {((isPersonalAgent && agent.is_public) || isDeployedPersonal) && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}

@@ -25,23 +25,53 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get list of agent IDs that have been deployed to the store
+    // to avoid showing duplicates
+    const deployedAgentIds = (prebuiltAgents || [])
+      .filter((agent: any) => agent.original_agent_id)
+      .map((agent: any) => agent.original_agent_id);
+
     // Fetch user-minted agents (only public ones or user's own agents)
     let mintedAgents = [];
 
     if (userWallet) {
       // For authenticated users: get all their agents (public + private) and public agents from others
-      const { data: allPublicAgents, error: publicError } = await supabase
+      let publicAgentsQuery = supabase
         .from("agents")
         .select("*")
         .eq("is_nft", true)
         .eq("is_public", true);
 
-      const { data: userPrivateAgents, error: privateError } = await supabase
+      // Only add the exclusion filter if there are deployed agents
+      if (deployedAgentIds.length > 0) {
+        publicAgentsQuery = publicAgentsQuery.not(
+          "id",
+          "in",
+          `(${deployedAgentIds.join(",")})`
+        );
+      }
+
+      const { data: allPublicAgents, error: publicError } =
+        await publicAgentsQuery;
+
+      let privateAgentsQuery = supabase
         .from("agents")
         .select("*")
         .eq("is_nft", true)
         .eq("is_public", false)
         .eq("creator_wallet_address", userWallet);
+
+      // Only add the exclusion filter if there are deployed agents
+      if (deployedAgentIds.length > 0) {
+        privateAgentsQuery = privateAgentsQuery.not(
+          "id",
+          "in",
+          `(${deployedAgentIds.join(",")})`
+        );
+      }
+
+      const { data: userPrivateAgents, error: privateError } =
+        await privateAgentsQuery;
 
       if (publicError) {
         console.error("Error fetching public agents:", publicError);
@@ -62,12 +92,24 @@ export async function GET(request: NextRequest) {
       // Combine all public agents + user's private agents
       mintedAgents = [...(allPublicAgents || []), ...(userPrivateAgents || [])];
     } else {
-      // For anonymous users: only public agents
-      const { data: publicAgents, error: publicError } = await supabase
+      // For anonymous users: only public agents that haven't been deployed to store
+      let publicAgentsQuery = supabase
         .from("agents")
         .select("*")
         .eq("is_nft", true)
         .eq("is_public", true);
+
+      // Only add the exclusion filter if there are deployed agents
+      if (deployedAgentIds.length > 0) {
+        publicAgentsQuery = publicAgentsQuery.not(
+          "id",
+          "in",
+          `(${deployedAgentIds.join(",")})`
+        );
+      }
+
+      const { data: publicAgents, error: publicError } =
+        await publicAgentsQuery;
 
       if (publicError) {
         console.error("Error fetching public minted agents:", publicError);
@@ -91,11 +133,21 @@ export async function GET(request: NextRequest) {
         visualRepresentation: agent.visual_representation || "",
         avatar: agent.avatar || "",
         category: agent.category,
-        isMinted: agent.is_minted || false,
+        isMinted:
+          userWallet && agent.is_minted && agent.owner_wallet === userWallet,
+        isMintedByOthers:
+          agent.is_minted && (!userWallet || agent.owner_wallet !== userWallet),
         ownerWallet: agent.owner_wallet,
         mintDate: agent.mint_date,
         price: agent.price || 0,
         type: "prebuilt" as const,
+        originalAgentId: agent.original_agent_id,
+        isDeployedPersonal: Boolean(agent.original_agent_id),
+        creatorWallet: agent.creator_wallet,
+        isOwned:
+          userWallet &&
+          ((agent.is_minted && agent.owner_wallet === userWallet) ||
+            (agent.original_agent_id && agent.creator_wallet === userWallet)),
       })
     );
 
@@ -109,13 +161,13 @@ export async function GET(request: NextRequest) {
       visualRepresentation: agent.image_url || "",
       avatar: agent.image_url || "",
       category: agent.agent_type || "Generalist",
-      isMinted: true,
+      isMinted: userWallet === agent.creator_wallet_address,
       ownerWallet: agent.creator_wallet_address,
       mintDate: agent.created_at,
       price: 0, // User minted agents are free to the owner
       type: "minted" as const,
       nftMintAddress: agent.nft_mint_address,
-      isOwned: userWallet === agent.creator_wallet_address,
+      isOwned: userWallet === agent.creator_wallet_address, // User always owns their own minted agents
     }));
 
     // Combine both types

@@ -14,6 +14,7 @@ export interface PrebuiltAgent {
     | "Research"
     | "Generalist";
   isMinted: boolean;
+  isMintedByOthers?: boolean;
   owner?: string;
   ownerWallet?: string;
   mintDate?: Date | string;
@@ -23,6 +24,9 @@ export interface PrebuiltAgent {
   type?: "prebuilt" | "minted";
   nftMintAddress?: string;
   isOwned?: boolean;
+  originalAgentId?: string;
+  isDeployedPersonal?: boolean;
+  creatorWallet?: string;
 }
 
 export interface AgentCapability {

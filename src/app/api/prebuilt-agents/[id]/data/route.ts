@@ -29,7 +29,8 @@ export async function POST(
     const data = await PrebuiltAgentsService.getAgentLiveData(
       params.id,
       capability,
-      requestParams
+      requestParams,
+      walletAddress
     );
 
     return NextResponse.json({

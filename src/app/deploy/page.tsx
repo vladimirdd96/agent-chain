@@ -28,7 +28,7 @@ const agentTypeOptions = [
 ];
 
 export default function DeployAgentPage() {
-  const { connected } = useWallet();
+  const { connected, publicKey } = useWallet();
   const [formData, setFormData] = useState<FormData>({
     agentType: "",
     agentName: "",
@@ -69,15 +69,50 @@ export default function DeployAgentPage() {
   const handleDeploy = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (!validateForm() || !connected || !publicKey) return;
 
     setIsDeploying(true);
 
-    // Simulate deployment process
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/agent/deploy", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.agentName,
+          description: formData.description,
+          type: formData.agentType,
+          parameters: formData.initialParameters
+            ? JSON.parse(formData.initialParameters)
+            : {},
+          walletAddress: publicKey,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.agent) {
+        setIsDeploying(false);
+        setShowSuccessModal(true);
+
+        // Clear form after successful deployment
+        setFormData({
+          agentType: "",
+          agentName: "",
+          description: "",
+          initialParameters: "",
+        });
+      } else {
+        throw new Error(result.error || "Failed to deploy agent");
+      }
+    } catch (error) {
+      console.error("Deployment error:", error);
+      setValidationErrors([
+        error instanceof Error ? error.message : "Failed to deploy agent",
+      ]);
       setIsDeploying(false);
-      setShowSuccessModal(true);
-    }, 3000);
+    }
   };
 
   const generateNFTId = () => {

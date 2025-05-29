@@ -326,10 +326,15 @@ export function Navigation() {
                       <motion.div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
                       <div className="relative flex items-center justify-center space-x-2">
                         <RocketLaunchIcon className="w-5 h-5" />
-                        <span>Create Agent</span>
+                        <span>Create & Mint Agent</span>
                       </div>
                     </motion.div>
                   </Link>
+
+                  <div className="text-center text-xs text-white/60">
+                    💡 Create your AI agent and it gets minted as an NFT
+                    automatically
+                  </div>
                 </div>
               </div>
             </motion.div>

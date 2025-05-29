@@ -2,22 +2,25 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 interface DeploySuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
-  agentName: string;
-  agentType: string;
-  nftId: string;
+  agentName?: string;
+  agentType?: string;
+  nftId?: string;
 }
 
 const DeploySuccessModal: React.FC<DeploySuccessModalProps> = ({
   isOpen,
   onClose,
-  agentName,
-  agentType,
-  nftId,
+  agentName = "Your Agent",
+  agentType = "solana",
+  nftId = "unknown",
 }) => {
+  const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -250,26 +253,26 @@ const DeploySuccessModal: React.FC<DeploySuccessModalProps> = ({
                   transition={{ delay: 0.7 }}
                   className="space-y-3"
                 >
-                  <motion.button
-                    className="w-full px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-lg transition-all duration-300"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    className="w-full"
                     onClick={() => {
-                      // Navigate to agent store instead of specific agent (which may not exist yet)
-                      window.location.href = "/agent-store";
+                      onClose();
+                      router.push("/workspace");
                     }}
                   >
-                    🎨 View in Marketplace
-                  </motion.button>
+                    🏠 Go to Workspace
+                  </Button>
 
-                  <motion.button
-                    className="w-full px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-lg transition-all duration-300 border border-white/20"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    className="w-full"
                     onClick={onClose}
                   >
-                    Deploy Another Agent
-                  </motion.button>
+                    Create Another Agent
+                  </Button>
                 </motion.div>
               )}
 

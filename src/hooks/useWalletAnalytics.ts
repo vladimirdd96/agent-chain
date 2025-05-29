@@ -17,11 +17,13 @@ export function useWalletAnalytics() {
         setAnalytics(data);
         return data;
       } catch (err) {
-        setError(
+        const errorMessage =
           err instanceof Error
             ? err.message
-            : "Failed to fetch wallet analytics"
-        );
+            : "Failed to fetch wallet analytics";
+        console.warn("Wallet analytics error (non-blocking):", errorMessage);
+        setError(errorMessage);
+        setAnalytics(null);
         return null;
       } finally {
         setLoading(false);

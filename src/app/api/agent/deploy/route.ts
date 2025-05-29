@@ -45,7 +45,7 @@ export async function POST(request: Request) {
           agent_type: type,
           chain: type === "solana" ? "Solana" : "EVM",
           creator_wallet_address: walletAddress,
-          is_public: true,
+          is_public: false, // Personal agents start as private, can be deployed to store later
           is_nft: false,
         },
       ])
@@ -92,7 +92,32 @@ export async function POST(request: Request) {
     } catch (nftError) {
       console.error("NFT minting error:", nftError);
 
-      // Agent remains with is_nft: false if minting fails
+      // In development or if NFT minting fails, still return success but without NFT
+      if (process.env.NODE_ENV === "development") {
+        // Update agent to mark as NFT even without real minting in development
+        const { error: updateError } = await supabase
+          .from("agents")
+          .update({
+            nft_mint_address: `dev-${agent.id}`, // Development NFT address
+            is_nft: true,
+          })
+          .eq("id", agent.id);
+
+        if (updateError) {
+          console.error("Failed to update agent in development:", updateError);
+        }
+
+        return NextResponse.json({
+          agent: {
+            ...agent,
+            nft_mint_address: `dev-${agent.id}`,
+            is_nft: true,
+          },
+          message: "Agent created successfully (development mode)",
+        });
+      }
+
+      // Agent remains with is_nft: false if minting fails in production
       return NextResponse.json(
         { error: "Failed to mint agent NFT" },
         { status: 500 }

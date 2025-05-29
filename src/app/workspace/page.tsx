@@ -22,8 +22,13 @@ export default function WorkspacePage() {
 
   useEffect(() => {
     if (connected && publicKey) {
-      getAnalytics(publicKey);
+      // Always load user agents
       loadUserAgents();
+
+      // Try to get analytics but don't let it block the main functionality
+      getAnalytics(publicKey).catch((error) => {
+        console.warn("Failed to load wallet analytics (non-blocking):", error);
+      });
     }
   }, [connected, publicKey]);
 
@@ -40,40 +45,73 @@ export default function WorkspacePage() {
           `/api/agents?creator_wallet=${encodeURIComponent(
             publicKey
           )}&sort=created_at&order=desc`
-        ),
+        ).catch((error) => {
+          console.error("❌ Failed to fetch user-created agents:", error);
+          return { ok: false, statusText: `Network error: ${error.message}` };
+        }),
         // Minted prebuilt agents owned by user
-        fetch(`/api/agent-store?user_wallet=${encodeURIComponent(publicKey)}`),
+        fetch(
+          `/api/agent-store?user_wallet=${encodeURIComponent(publicKey)}`
+        ).catch((error) => {
+          console.error("❌ Failed to fetch prebuilt agents:", error);
+          return { ok: false, statusText: `Network error: ${error.message}` };
+        }),
       ]);
 
       console.log("🔍 Fetching agents for wallet:", publicKey);
+      console.log("🔍 API URLs:", {
+        userCreated: `/api/agents?creator_wallet=${encodeURIComponent(
+          publicKey
+        )}&sort=created_at&order=desc`,
+        prebuilt: `/api/agent-store?user_wallet=${encodeURIComponent(
+          publicKey
+        )}`,
+      });
 
       if (!userCreatedResponse.ok) {
-        throw new Error(
-          `Failed to fetch user agents: ${userCreatedResponse.statusText}`
+        console.error(
+          "❌ User created agents API failed:",
+          userCreatedResponse.statusText
         );
       }
 
       if (!prebuiltResponse.ok) {
-        throw new Error(
-          `Failed to fetch prebuilt agents: ${prebuiltResponse.statusText}`
+        console.error(
+          "❌ Prebuilt agents API failed:",
+          prebuiltResponse.statusText
         );
       }
 
+      // Only parse JSON for successful responses
       const [userCreatedData, prebuiltData] = await Promise.all([
-        userCreatedResponse.json(),
-        prebuiltResponse.json(),
+        userCreatedResponse.ok && "json" in userCreatedResponse
+          ? userCreatedResponse.json()
+          : { agents: [] },
+        prebuiltResponse.ok && "json" in prebuiltResponse
+          ? prebuiltResponse.json()
+          : { data: [] },
       ]);
 
       console.log("📊 User Created API Response:", userCreatedData);
       console.log("📊 Prebuilt API Response:", prebuiltData);
+      console.log("📊 Filtering prebuilt agents for wallet:", publicKey);
+      console.log("📊 All prebuilt data:", prebuiltData.data);
 
       // Combine user-created agents and minted prebuilt agents owned by user
       const userCreatedAgents = userCreatedData.agents || [];
+
+      // Filter for both prebuilt agents owned by user AND user-minted agents
       const ownedPrebuiltAgents = (prebuiltData.data || []).filter(
         (agent: any) =>
-          agent.type === "prebuilt" &&
-          agent.isMinted &&
-          agent.ownerWallet === publicKey
+          (agent.type === "prebuilt" &&
+            agent.isMinted &&
+            agent.ownerWallet === publicKey) ||
+          (agent.type === "minted" && agent.ownerWallet === publicKey)
+      );
+
+      console.log(
+        "📊 Owned prebuilt agents after filtering:",
+        ownedPrebuiltAgents
       );
 
       // Transform prebuilt agents to match AgentType interface
@@ -126,8 +164,16 @@ export default function WorkspacePage() {
 
   const handleRefresh = () => {
     if (connected && publicKey) {
-      refreshAnalytics();
+      // Always refresh agents
       loadUserAgents();
+
+      // Try to refresh analytics but don't let it block the main functionality
+      refreshAnalytics().catch((error) => {
+        console.warn(
+          "Failed to refresh wallet analytics (non-blocking):",
+          error
+        );
+      });
     }
   };
 

@@ -201,9 +201,31 @@ const WorkspaceEmptyState = () => {
               Ready to Get Started?
             </h2>
             <p className="text-white/80 mb-6 leading-relaxed">
-              Mint your first AI Agent NFT and unlock live blockchain analytics,
-              trading automation, and more.
+              Get your first AI agent by minting a prebuilt agent from our store
+              or deploying your own custom agent.
             </p>
+
+            {/* How to get agents info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                <h3 className="text-purple-300 font-semibold mb-2">
+                  🏪 Mint from Store
+                </h3>
+                <p className="text-white/70 text-sm">
+                  Browse our curated collection of professional AI agents and
+                  mint them as NFTs to your wallet.
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                <h3 className="text-blue-300 font-semibold mb-2">
+                  🛠️ Create Your Own
+                </h3>
+                <p className="text-white/70 text-sm">
+                  Deploy a custom AI agent tailored to your specific needs and
+                  mint it as an NFT.
+                </p>
+              </div>
+            </div>
           </motion.div>
 
           {/* Features Grid */}
@@ -232,35 +254,43 @@ const WorkspaceEmptyState = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="space-y-4"
+            className="flex flex-col md:flex-row gap-4 items-center justify-center"
           >
-            <Link href="/deploy">
+            <Link href="/agent-store">
               <Button
                 variant="primary"
                 size="lg"
                 className="w-full md:w-auto group relative overflow-hidden"
               >
-                <SparklesIcon className="w-5 h-5 mr-2 transition-transform group-hover:scale-110" />
-                Create Your First Agent
+                <span className="text-lg mr-2">🏪</span>
+                Browse Agent Store
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
               </Button>
             </Link>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 1.1 }}
-              className="text-sm text-white/60"
-            >
-              Or{" "}
-              <Link
-                href="/agent-store"
-                className="text-purple-400 hover:text-purple-300 transition-colors underline decoration-dotted underline-offset-4"
+            <div className="text-white/40 font-medium">OR</div>
+
+            <Link href="/deploy">
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full md:w-auto group relative overflow-hidden"
               >
-                browse the Agent Store
-              </Link>{" "}
-              for inspiration
-            </motion.div>
+                <SparklesIcon className="w-5 h-5 mr-2 transition-transform group-hover:scale-110" />
+                Create Custom Agent
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 transform translate-x-[-100%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              </Button>
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+            className="mt-6 text-sm text-white/60"
+          >
+            💡 Once you mint or deploy an agent, it will appear here in your
+            workspace
           </motion.div>
         </div>
       </motion.div>

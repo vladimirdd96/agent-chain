@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { messages, agentContext } = await request.json();
+    const { messages, isPremium, agentType } = await request.json();
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -23,29 +23,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create system message with agent context
-    const systemMessage = {
-      role: "system" as const,
-      content: `You are ${agentContext.name}, an AI assistant specializing in ${
-        agentContext.category
-      }. 
-
-Your description: ${agentContext.description}
-
-Your capabilities include:
-${
-  agentContext.capabilities
-    ?.map((cap: any) => `- ${cap.name}: ${cap.description}`)
-    .join("\n") || "General AI assistance"
-}
-
-Please respond as this agent, staying in character and focusing on your specialization. Be helpful, knowledgeable, and engaging. Keep responses concise but informative. If asked about capabilities you don't have or topics outside your specialization, politely redirect the conversation back to your area of expertise.`,
-    };
-
+    // Use the messages array as-is since the system message is already included
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini-2024-07-18",
-      messages: [systemMessage, ...messages],
-      max_tokens: 500,
+      messages: messages,
+      max_tokens: isPremium ? 1000 : 300, // Premium users get longer responses
       temperature: 0.7,
       presence_penalty: 0.1,
       frequency_penalty: 0.1,
@@ -63,6 +45,8 @@ Please respond as this agent, staying in character and focusing on your speciali
     return NextResponse.json({
       message: assistantMessage,
       usage: completion.usage,
+      isPremium,
+      agentType,
     });
   } catch (error) {
     console.error("Chat API error:", error);

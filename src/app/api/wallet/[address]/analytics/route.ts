@@ -3,6 +3,10 @@ import Moralis from "moralis";
 
 // Initialize Moralis
 const initMoralis = async () => {
+  if (!process.env.NEXT_PUBLIC_MORALIS_API_KEY) {
+    throw new Error("Moralis API key not configured");
+  }
+
   if (!Moralis.Core.isStarted) {
     await Moralis.start({
       apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
@@ -107,6 +111,18 @@ export async function GET(request: Request, { params }: RouteParams) {
     );
   } catch (error) {
     console.error("Error in GET /wallet/[address]/analytics:", error);
+
+    // Check if it's a Moralis configuration error
+    if (
+      error instanceof Error &&
+      error.message.includes("Moralis API key not configured")
+    ) {
+      return NextResponse.json(
+        { error: "Wallet analytics unavailable - API configuration needed" },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
       { error: "Failed to fetch wallet analytics" },
       { status: 500 }

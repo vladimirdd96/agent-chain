@@ -25,6 +25,7 @@ export function Navigation() {
     { name: "Agent Store", href: "/agent-store" },
     { name: "MCP Store", href: "/mcp-store" },
     { name: "Tools", href: "/tools" },
+    { name: "Examples", href: "/examples" },
     { name: "Docs", href: "/docs" },
   ];
 

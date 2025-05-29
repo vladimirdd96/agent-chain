@@ -4,8 +4,36 @@ import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import CodeBlock from "@/components/ui/CodeBlock";
 
 const MCPSection = () => {
+  const pythonCode = `import requests
+
+# Your API token
+token = "tk_095fa33201c94b108aee"
+
+# Use streaming response
+response = requests.post(
+    "https://deepcore.top/api/open/agents/{agentId}/dialogue",
+    headers={
+        "X-API-Token": token
+    },
+    json={
+        "message": "Hello, Agent!",
+        "conversation_id": "optional-id",
+        "init_flag": False
+    },
+    stream=True
+)
+
+# Process streaming response
+for chunk in response.iter_lines():
+    if chunk:
+        data = chunk.decode('utf-8')
+        if data.startswith('data: '):
+            content = data[6:]
+            print(content)`;
+
   return (
     <section className="py-24 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-blue-900/20" />
@@ -46,42 +74,16 @@ const MCPSection = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative aspect-square"
+            className="relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl backdrop-blur-3xl">
-              <div className="absolute inset-0 bg-black/50 rounded-3xl">
-                <div className="p-8">
-                  <pre className="text-sm text-white/70 overflow-x-auto">
-                    <code>{`import requests
-
-# Your API token
-token = "tk_095fa33201c94b108aee"
-
-# Use streaming response
-response = requests.post(
-    "https://deepcore.top/api/open/agents/{agentId}/dialogue",
-    headers={
-        "X-API-Token": token
-    },
-    json={
-        "message": "Hello, Agent!",
-        "conversation_id": "optional-id",
-        "init_flag": False
-    },
-    stream=True
-)
-
-# Process streaming response
-for chunk in response.iter_lines():
-    if chunk:
-        data = chunk.decode('utf-8')
-        if data.startswith('data: '):
-            content = data[6:]
-            print(content)`}</code>
-                  </pre>
-                </div>
-              </div>
-            </div>
+            <CodeBlock
+              code={pythonCode}
+              language="python"
+              fileName="mcp_client.py"
+              variant="compact"
+              theme="dark"
+              maxHeight="600px"
+            />
           </motion.div>
         </div>
       </div>

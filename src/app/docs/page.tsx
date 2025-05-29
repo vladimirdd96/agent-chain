@@ -12,6 +12,7 @@ import {
   SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/Button";
+import CodeBlock from "@/components/ui/CodeBlock";
 
 // Type definitions
 interface SubSection {
@@ -1778,48 +1779,6 @@ function SearchBar({ searchQuery, onSearchChange }: SearchBarProps) {
             transition={{ duration: 0.2 }}
           />
         )}
-      </div>
-    </motion.div>
-  );
-}
-
-interface CodeBlockProps {
-  code: string;
-  language: string;
-}
-
-function CodeBlock({ code, language }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false);
-
-  const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <motion.div
-      className="relative group"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="flex items-center justify-between bg-gray-900/50 backdrop-blur-md border border-white/10 rounded-t-lg px-4 py-2">
-        <span className="text-sm text-white/70">{language}</span>
-        <motion.button
-          onClick={copyToClipboard}
-          className="flex items-center gap-2 px-3 py-1 text-sm text-white/70 hover:text-white transition-colors rounded-md hover:bg-white/10"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ClipboardDocumentIcon className="w-4 h-4" />
-          {copied ? "Copied!" : "Copy"}
-        </motion.button>
-      </div>
-      <div className="bg-gray-900/30 backdrop-blur-md border border-t-0 border-white/10 rounded-b-lg p-4 overflow-x-auto">
-        <pre className="text-sm text-white/90">
-          <code>{code}</code>
-        </pre>
       </div>
     </motion.div>
   );

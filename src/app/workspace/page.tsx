@@ -148,8 +148,8 @@ export default function WorkspacePage() {
           is_public: true,
           status: "active",
           nft_mint_address: agent.nftMintAddress || undefined,
-          created_at: agent.mintDate,
-          updated_at: agent.mintDate,
+          created_at: agent.mintDate || new Date().toISOString(), // Provide fallback date
+          updated_at: agent.mintDate || new Date().toISOString(),
           // Additional UI fields
           chain: agent.chainCompatibility?.[0] || "Ethereum",
           image_url: agent.avatar,

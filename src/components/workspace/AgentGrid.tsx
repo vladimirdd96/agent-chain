@@ -81,10 +81,10 @@ export function AgentGrid({ agents }: AgentGridProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr"
       >
         {agents.map((agent, index) => (
-          <motion.div key={agent.id} variants={itemVariants}>
+          <motion.div key={agent.id} variants={itemVariants} className="h-full">
             <EnhancedAgentCard agent={agent} />
           </motion.div>
         ))}

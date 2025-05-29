@@ -338,10 +338,12 @@ export default function AgentStorePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr"
             >
               {filteredAgents.map((agent, index) => (
-                <EnhancedAgentCard key={agent.id} agent={agent} index={index} />
+                <div key={agent.id} className="h-full">
+                  <EnhancedAgentCard agent={agent} index={index} />
+                </div>
               ))}
             </motion.div>
           ) : (

@@ -36,10 +36,11 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
   const isPersonalAgent =
     !isPrebuiltAgent && !isDeployedPersonal && Boolean(agent.creator_wallet);
 
+  // In the workspace, ALL agents are owned by the user (filtered at API level)
   // Personal agents are always premium (owned by creator)
-  // Prebuilt agents are premium only if minted
+  // Prebuilt agents in workspace are premium (user has minted them)
   // Deployed personal agents are premium (user owns them in store)
-  const isPremium = isPersonalAgent || isPremiumMinted || isDeployedPersonal;
+  const isPremium = true; // All workspace agents are owned by the user
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -68,6 +69,27 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
   };
 
   const TypeIcon = getTypeIcon(agent.type);
+
+  // Helper function to get proper creation date
+  const getCreationDate = () => {
+    // For prebuilt agents, try mintDate first, then created_at
+    if (isPrebuiltAgent && (agent as any).originalAgent?.mintDate) {
+      return new Date((agent as any).originalAgent.mintDate);
+    }
+
+    // Try created_at if it's valid
+    if (agent.created_at && new Date(agent.created_at).getFullYear() > 1990) {
+      return new Date(agent.created_at);
+    }
+
+    // For deployed personal agents, use today's date as fallback
+    if (isDeployedPersonal) {
+      return new Date();
+    }
+
+    // Default fallback
+    return new Date();
+  };
 
   const deployToStore = async () => {
     if (!agent.creator_wallet || isDeploying) return;
@@ -127,7 +149,7 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
     <>
       <motion.div
         whileHover={{ y: -4, scale: 1.02 }}
-        className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/60 via-purple-900/20 to-black/60 backdrop-blur-md border border-white/10 p-6 cursor-pointer transition-all duration-300 hover:border-purple-500/50"
+        className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-black/60 via-purple-900/20 to-black/60 backdrop-blur-md border border-white/10 p-6 cursor-pointer transition-all duration-300 hover:border-purple-500/50 h-full flex flex-col"
       >
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -147,7 +169,7 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
           }}
         />
 
-        <div className="relative z-10">
+        <div className="relative z-10 flex flex-col h-full">
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -213,7 +235,7 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
             <div className="bg-white/5 rounded-lg p-3 backdrop-blur-sm">
               <p className="text-white/50 text-xs mb-1">Created</p>
               <p className="text-white text-sm font-medium">
-                {new Date(agent.created_at).toLocaleDateString()}
+                {getCreationDate().toLocaleDateString()}
               </p>
             </div>
             <div className="bg-white/5 rounded-lg p-3 backdrop-blur-sm">
@@ -228,8 +250,11 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
             </div>
           </div>
 
+          {/* Spacer to push buttons to bottom */}
+          <div className="flex-1"></div>
+
           {/* Quick Actions */}
-          <div className="space-y-3">
+          <div className="space-y-3 mb-4">
             {/* Primary Chat Action */}
             <Button
               variant="primary"
@@ -270,50 +295,53 @@ export function EnhancedAgentCard({ agent }: EnhancedAgentCardProps) {
             )}
           </div>
 
-          {/* NFT Badge */}
-          {isPremium && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 p-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg border border-green-500/20"
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheckIcon className="w-4 h-4 text-green-400" />
-                <span className="text-xs text-green-400 font-medium">
-                  Minted as NFT
-                </span>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  className="ml-auto text-green-400 hover:text-green-300"
-                >
-                  <ArrowTopRightOnSquareIcon className="w-3 h-3" />
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
+          {/* Fixed Height Badge Area - Always reserve space for badges */}
+          <div className="space-y-2 min-h-[60px]">
+            {/* NFT Badge */}
+            {isPremium && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-2 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-lg border border-green-500/20"
+              >
+                <div className="flex items-center gap-2">
+                  <ShieldCheckIcon className="w-4 h-4 text-green-400" />
+                  <span className="text-xs text-green-400 font-medium">
+                    Minted as NFT
+                  </span>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    className="ml-auto text-green-400 hover:text-green-300"
+                  >
+                    <ArrowTopRightOnSquareIcon className="w-3 h-3" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
 
-          {/* Store Deployment Badge */}
-          {((isPersonalAgent && agent.is_public) || isDeployedPersonal) && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 p-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg border border-blue-500/20"
-            >
-              <div className="flex items-center gap-2">
-                <GlobeAltIcon className="w-4 h-4 text-blue-400" />
-                <span className="text-xs text-blue-400 font-medium">
-                  Available in Store
-                </span>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  className="ml-auto text-blue-400 hover:text-blue-300"
-                  onClick={() => window.open("/agent-store", "_blank")}
-                >
-                  <ArrowTopRightOnSquareIcon className="w-3 h-3" />
-                </motion.button>
-              </div>
-            </motion.div>
-          )}
+            {/* Store Deployment Badge */}
+            {((isPersonalAgent && agent.is_public) || isDeployedPersonal) && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-2 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-lg border border-blue-500/20"
+              >
+                <div className="flex items-center gap-2">
+                  <GlobeAltIcon className="w-4 h-4 text-blue-400" />
+                  <span className="text-xs text-blue-400 font-medium">
+                    Available in Store
+                  </span>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    className="ml-auto text-blue-400 hover:text-blue-300"
+                    onClick={() => window.open("/agent-store", "_blank")}
+                  >
+                    <ArrowTopRightOnSquareIcon className="w-3 h-3" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+          </div>
         </div>
       </motion.div>
 

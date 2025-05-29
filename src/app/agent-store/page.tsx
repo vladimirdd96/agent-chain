@@ -34,7 +34,7 @@ export default function AgentStorePage() {
   const [selectedChain, setSelectedChain] = useState("All");
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     fetchAgents();
